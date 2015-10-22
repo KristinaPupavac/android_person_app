@@ -43,5 +43,13 @@
         android:text="delete"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"/>
+    <Button
+        android:layout_width="80dp"
+        android:layout_height="35dp"
+        android:id="@+id/edit"
+        android:text="edit"
+        android:layout_toLeftOf="@+id/delete"
+        android:layout_toStartOf="@+id/delete"
+        android:layout_alignParentTop="true"/>
 
 </RelativeLayout>

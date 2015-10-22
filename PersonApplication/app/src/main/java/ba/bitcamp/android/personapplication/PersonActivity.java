@@ -1,5 +1,6 @@
 package ba.bitcamp.android.personapplication;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -57,6 +58,7 @@ public class PersonActivity extends AppCompatActivity {
         public TextView mDate;
         private Button mDelete;
         private Person mPerson;
+        private Button mEdit;
 
         public PersonHolder(View itemView) {
             super(itemView);
@@ -64,6 +66,16 @@ public class PersonActivity extends AppCompatActivity {
             mPersonSurname = (TextView) itemView.findViewById(R.id.list_person_surname);
             mDate = (TextView) itemView.findViewById(R.id.list_date);
             mDelete = (Button) itemView.findViewById(R.id.delete);
+            mEdit = (Button) itemView.findViewById(R.id.edit);
+
+            mEdit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(PersonActivity.this, EditPersonActivity.class);
+                    intent.putExtra("asd", mPerson);
+                    startActivity(intent);
+                }
+            });
 
 
             mDelete.setOnClickListener(new View.OnClickListener() {

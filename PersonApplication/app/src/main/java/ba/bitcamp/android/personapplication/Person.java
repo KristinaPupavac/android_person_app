@@ -1,5 +1,6 @@
 package ba.bitcamp.android.personapplication;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
@@ -7,7 +8,7 @@ import java.util.UUID;
 /**
  * Created by Kristina Pupavac on 10/21/2015.
  */
-public class Person {
+public class Person implements Serializable {
     private UUID id;
     private String name;
     private String surname;
