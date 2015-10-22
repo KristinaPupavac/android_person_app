@@ -20,7 +20,8 @@ public class PersonActivity extends AppCompatActivity {
     private EditText mName;
     private EditText mSurname;
     private Button mAdd;
-    private List<Person> personList = new LinkedList<Person>();
+    private static PersonList personList = PersonList.getInstance();
+    //public static List<Person> personList = new LinkedList<Person>();
     private RecyclerView recyclerView;
     private PersonAdapter personAdapter;
 
@@ -33,11 +34,9 @@ public class PersonActivity extends AppCompatActivity {
         mName = (EditText) findViewById(R.id.name);
         mSurname = (EditText) findViewById(R.id.surname);
         mAdd = (Button) findViewById(R.id.add_button);
+//        personAdapter = new PersonAdapter();
+//        recyclerView.setAdapter(personAdapter);
 
-        recyclerView = (RecyclerView) findViewById(R.id.person_recycler_view);
-        personAdapter = new PersonAdapter(personList);
-        recyclerView.setAdapter(personAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         mAdd.setOnClickListener(new View.OnClickListener() {
 
@@ -46,10 +45,14 @@ public class PersonActivity extends AppCompatActivity {
                 String name = mName.getText().toString();
                 String surname = mSurname.getText().toString();
 
-                personList.add(new Person(name, surname));
+                personList.addPerson(new Person(name, surname));
                 personAdapter.notifyDataSetChanged();
             }
         });
+
+        recyclerView = (RecyclerView) findViewById(R.id.person_recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(PersonActivity.this));
+        updateUI();
     }
 
     private class PersonHolder extends RecyclerView.ViewHolder {
@@ -72,7 +75,9 @@ public class PersonActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(PersonActivity.this, EditPersonActivity.class);
-                    intent.putExtra("asd", mPerson);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("asd", mPerson);
+                    intent.putExtras(bundle);
                     startActivity(intent);
                 }
             });
@@ -82,7 +87,7 @@ public class PersonActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     //UUID personId = mPerson.getId();
-                    personList.remove(mPerson);
+                    personList.removePerson(mPerson);
                     updateUI();
                     // personList.remove();
                     //personAdapter.notifyDataSetChanged();
@@ -106,11 +111,6 @@ public class PersonActivity extends AppCompatActivity {
     }
 
     private class PersonAdapter extends RecyclerView.Adapter<PersonHolder>{
-        private List<Person> mPersons;
-
-        public PersonAdapter(List<Person> persons){
-            mPersons = persons;
-        }
 
         @Override
         public PersonHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -121,19 +121,18 @@ public class PersonActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(PersonHolder holder, int position) {
-            Person person = mPersons.get(position);
+            Person person = PersonList.getInstance().getPersons().get(position);
             holder.bindPerson(person);
         }
 
         @Override
         public int getItemCount() {
-            return mPersons.size();
+            return PersonList.getInstance().getPersons().size();
         }
     }
 
     public void updateUI() {
-        List<Person> personsList = personList;
-        personAdapter = new PersonAdapter(personsList);
+        personAdapter = new PersonAdapter();
         recyclerView.setAdapter(personAdapter);
     }
 
