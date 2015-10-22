@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Button;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 public class PersonActivity extends AppCompatActivity {
     private EditText mName;
@@ -20,7 +22,6 @@ public class PersonActivity extends AppCompatActivity {
     private List<Person> personList = new LinkedList<Person>();
     private RecyclerView recyclerView;
     private PersonAdapter personAdapter;
-    private Button mDelete;
 
 
     @Override
@@ -31,7 +32,6 @@ public class PersonActivity extends AppCompatActivity {
         mName = (EditText) findViewById(R.id.name);
         mSurname = (EditText) findViewById(R.id.surname);
         mAdd = (Button) findViewById(R.id.add_button);
-        mDelete = (Button) findViewById(R.id.delete);
 
         recyclerView = (RecyclerView) findViewById(R.id.person_recycler_view);
         personAdapter = new PersonAdapter(personList);
@@ -47,16 +47,15 @@ public class PersonActivity extends AppCompatActivity {
 
                 personList.add(new Person(name, surname));
                 personAdapter.notifyDataSetChanged();
-
             }
         });
-
     }
 
     private class PersonHolder extends RecyclerView.ViewHolder {
         public TextView mPersonName;
         public TextView mPersonSurname;
         public TextView mDate;
+        private Button mDelete;
         private Person mPerson;
 
         public PersonHolder(View itemView) {
@@ -64,16 +63,25 @@ public class PersonActivity extends AppCompatActivity {
             mPersonName = (TextView) itemView.findViewById(R.id.list_person_name);
             mPersonSurname = (TextView) itemView.findViewById(R.id.list_person_surname);
             mDate = (TextView) itemView.findViewById(R.id.list_date);
+            mDelete = (Button) itemView.findViewById(R.id.delete);
 
-//            mDelete.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    // personList.remove();
-//                    //personAdapter.notifyDataSetChanged();
-//
-//                }
-//            });
 
+            mDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //UUID personId = mPerson.getId();
+                    personList.remove(mPerson);
+                    updateUI();
+                    // personList.remove();
+                    //personAdapter.notifyDataSetChanged();
+                }
+            });
+
+            if (mDelete == null){
+                Log.d("person activity", "null mDelete");
+            } else {
+                Log.d("person activity", "null mDelete not null");
+            }
         }
 
 
@@ -109,6 +117,12 @@ public class PersonActivity extends AppCompatActivity {
         public int getItemCount() {
             return mPersons.size();
         }
+    }
+
+    public void updateUI() {
+        List<Person> personsList = personList;
+        personAdapter = new PersonAdapter(personsList);
+        recyclerView.setAdapter(personAdapter);
     }
 
 }
